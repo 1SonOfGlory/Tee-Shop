@@ -1,0 +1,6 @@
+export function textValue(value:unknown,max=200,min=1){if(typeof value!=='string'||value.trim().length<min||value.length>max)throw Error('Please check the information you entered.');return value.trim()}
+export function quantity(value:unknown){if(typeof value!=='number'||!Number.isInteger(value)||value<1||value>20)throw Error('Quantity must be between 1 and 20.');return value}
+export async function readBody(request:Request){const raw=await request.text();if(raw.length>20000)throw Error('Request is too large.');const body:unknown=JSON.parse(raw);if(!body||typeof body!=='object'||Array.isArray(body))throw Error('Invalid request.');return body as Record<string,unknown>}
+export function variant(value:unknown){const s=textValue(value,5);if(!['XS','S','M','L','XL','XXL'].includes(s))throw Error('Choose a valid size.');return s}
+export function sameOrigin(request:Request){const origin=request.headers.get('origin');if(!origin||origin!==new URL(request.url).origin)throw Error('This request could not be verified. Please reload the page.')}
+export function allowedStatus(kind:string,value:unknown){const choices=kind==='project'?['received','discovery','design','review','complete']:['paid','processing','shipped','delivered'];if(typeof value!=='string'||!choices.includes(value))throw Error('Invalid status.');return value}

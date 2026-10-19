@@ -1,0 +1,3 @@
+const cashTransitions:Record<string,string[]>={cash_pending:['cash_pending','cash_confirmed'],cash_confirmed:['cash_confirmed','cash_shipped'],cash_shipped:['cash_shipped','cash_delivered'],cash_delivered:['cash_delivered','paid'],paid:['paid']};
+const onlineTransitions:Record<string,string[]>={paid:['paid','processing'],processing:['processing','shipped'],shipped:['shipped','delivered'],delivered:['delivered']};
+export function validateOrderTransition(provider:string,current:string,next:unknown){if(typeof next!=='string'||!(provider==='cash'?cashTransitions:onlineTransitions)[current]?.includes(next))throw Error('Choose the next valid order status. Online payments must be verified; cash can be marked paid after delivery and collection.');return next;}
